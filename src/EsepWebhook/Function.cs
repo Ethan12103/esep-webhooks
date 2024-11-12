@@ -20,18 +20,36 @@ public class Function
     {
         context.Logger.LogInformation($"FunctionHandler received: {input}");
 
-        dynamic json = JsonConvert.DeserializeObject<dynamic>(input.ToString());
-        string payload = $"{{'text':'Issue Created: {json.issue.html_url}'}}";
-        
-        var client = new HttpClient();
-        var webRequest = new HttpRequestMessage(HttpMethod.Post, Environment.GetEnvironmentVariable("SLACK_URL"))
+        try
         {
-            Content = new StringContent(payload, Encoding.UTF8, "application/json")
-        };
-    
-        var response = client.Send(webRequest);
-        using var reader = new StreamReader(response.Content.ReadAsStream());
+            dynamic json = JsonConvert.DeserializeObject<dynamic>(input);
             
-        return reader.ReadToEnd();
+            if (json == null || json.issue == null || json.issue.html_url == null)
+            {
+                return "Invalid input format. Please provide a valid JSON with 'issue' and 'html_url'.";
+            }
+
+            // Construct the payload for Slack
+            string payload = $"{{\"text\": \"Issue Created: {json.issue.html_url}\"}}";
+
+            using (var client = new HttpClient())
+            {
+                var webRequest = new HttpRequestMessage(HttpMethod.Post, Environment.GetEnvironmentVariable("SLACK_URL"))
+                {
+                    Content = new StringContent(payload, Encoding.UTF8, "application/json")
+                };
+
+                var response = client.Send(webRequest);
+                using (var reader = new StreamReader(response.Content.ReadAsStream()))
+                {
+                    return reader.ReadToEnd();
+                }
+            }
+        }
+        catch (JsonReaderException ex)
+        {
+            context.Logger.LogError($"JsonReaderException: {ex.Message}");
+            return $"Error parsing input JSON: {ex.Message}";
+        }
     }
 }
