@@ -15,3 +15,4 @@ C:\Users\Ethan\EsepWebhook\src\EsepWebhook\obj\Release\net8.0\linux-x64\refint\E
 C:\Users\Ethan\EsepWebhook\src\EsepWebhook\obj\Release\net8.0\linux-x64\EsepWebhook.pdb
 C:\Users\Ethan\EsepWebhook\src\EsepWebhook\obj\Release\net8.0\linux-x64\EsepWebhook.genruntimeconfig.cache
 C:\Users\Ethan\EsepWebhook\src\EsepWebhook\obj\Release\net8.0\linux-x64\ref\EsepWebhook.dll
+C:\Users\Ethan\EsepWebhook\src\EsepWebhook\obj\Release\net8.0\linux-x64\EsepWebhook.sourcelink.json
